@@ -1,0 +1,10 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.app-div{
+  /* background-image: url('../public/images/pexels-pixabay-268533.jpg'); */
+  background-size:cover;
+  height: 100vh;
+}
