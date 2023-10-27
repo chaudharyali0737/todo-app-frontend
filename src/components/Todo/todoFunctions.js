@@ -3,7 +3,7 @@ import {
   getAllTodos,
   getOneTodo,
   insertTodo,
-  updateOneTodo,
+  // updateOneTodo,
   deleteAllTodos,
 } from "../../api/api";
 import React, { useState, useEffect } from "react";
@@ -16,7 +16,7 @@ import {
   Navbar,
   Table,
   Alert,
-  Spinner,
+  // Spinner,
 } from "react-bootstrap";
 
 // const [id, setId] = useState(0);
@@ -166,19 +166,27 @@ function AllTodo(props) {
                       <td>{item.id}</td>
                       <td>
                         {" "}
-                        {item.task}
-                        {"       "}
+                        {item.task}{" "}
                         {hoveredRow === index && (
-                          <Button
-                            style={{ margin: "0.5px", padding: ".5px" }}
-                            variant="danger"
-                            onClick={() => {
-                              setdeleteTodoID(item.id);
-                              deleteOneTodo();
-                            }}
-                          >
-                            delete
-                          </Button>
+                          <>
+                            <Button
+                              style={{ padding: ".25px" }}
+                              variant="outline-success"
+                            >
+                              edit
+                            </Button>
+                            <Button
+                              style={{ padding: ".25px" }}
+                              variant="outline-danger"
+                              onClick={() => {
+                                setdeleteTodoID(item.id);
+                                deleteOneTodo();
+                              }}
+                            >
+                              {" "}
+                              delete
+                            </Button>
+                          </>
                         )}
                       </td>
                     </tr>
