@@ -8,7 +8,7 @@ import {
 } from "../../api/api";
 import React, { useState, useEffect } from "react";
 import "./todo.css";
-import { Input ,Alert } from "@mui/material";
+import { Input, Alert } from "@mui/material";
 import {
   Button,
   Card,
@@ -93,6 +93,7 @@ function AllTodo(props) {
   const deleteOneTodo = async () => {
     deleteTodo(deleteTodoID);
     setIsDeleted(!isDeleted);
+    setdeleteTodoID(0)
   };
 
 
@@ -145,19 +146,19 @@ function AllTodo(props) {
                 >
                   ADD
                 </Button>
-                
-             
 
-              <span style={{ margin: "3px" }}></span>
-              <Button
-                size="sm"
-                className=""
-                variant="dark"
-                expand="sm"
-                onClick={deleteAll}
-              >
-                Clear All Task
-              </Button>
+
+
+                <span style={{ margin: "3px" }}></span>
+                <Button
+                  size="sm"
+                  className=""
+                  variant="dark"
+                  expand="sm"
+                  onClick={deleteAll}
+                >
+                  Clear All Task
+                </Button>
               </div>
             </div>
             <Table bordered striped responsive>
