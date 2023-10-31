@@ -8,26 +8,16 @@ import {
 } from "../../api/api";
 import React, { useState, useEffect } from "react";
 import "./todo.css";
-import { Input } from "@mui/material";
+import { Input ,Alert } from "@mui/material";
 import {
   Button,
   Card,
   Container,
   Navbar,
   Table,
-  Alert,
-  // Spinner,
 } from "react-bootstrap";
 
-import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-} from '@chakra-ui/react'
 
-
-// const [todoTask, settodoTask] = useState("");
 
 function AllTodo(props) {
   const [editedTaskID, setEditedTaskID] = useState(0);
@@ -43,6 +33,14 @@ function AllTodo(props) {
   const [deleteTodoID, setdeleteTodoID] = useState(0);
   const [showEditInput, setShowEditInput] = useState(false);
   const [editedTask, setEditedTask] = useState(""); // You can use this state to track the edited task
+
+  const handleAddClick = () => {
+    if (todoTask && todoTask.length > 0) {
+      insertOneTodo();
+    } else {
+      alert("empty task cannot be inserted ")
+    }
+  };
   useEffect(() => {
     const getAll = async () => {
       let result = await getAllTodos();
@@ -55,13 +53,10 @@ function AllTodo(props) {
   }, [isDeleteAll, isInserted, isDeleted, isGetAll]);
 
   const insertOneTodo = async () => {
-    if (todoTask !== "") {
-      insertTodo(todoTask);
-      setisInserted(!isInserted);
-      settodoTask("");
-    } else {
-      // alert("cannot add empty todo")
-    }
+
+    insertTodo(todoTask);
+    setisInserted(!isInserted);
+    settodoTask("");
 
   };
   const getOne = async () => {
@@ -131,35 +126,28 @@ function AllTodo(props) {
                 margin: "19px", // Add margin to create space around the element
               }}
             >
-              <Input
-                placeholder="enter task"
-                variant="light"
-                animation="glow"
-                xs={4}
-                value={todoTask}
-                onChange={(event) => settodoTask(event.target.value)}
-              ></Input>
-              <span style={{ margin: "3px" }}></span>
-              <Button
-                size="sm"
-                className=""
-                variant="dark"
-                expand="sm"
-                onClick={() => {
-                  if (todoTask === "") {
-                    <Alert status='error'>
-                      <AlertIcon />
-                      <AlertTitle>Your browser is outdated!</AlertTitle>
-                      <AlertDescription>Your Chakra experience may be degraded.</AlertDescription>
-                    </Alert>
-                  } else {
-                    insertOneTodo
-                  }
+              <div>
+                <Input
+                  placeholder="enter task"
+                  variant="light"
+                  animation="glow"
+                  xs={4}
+                  value={todoTask}
+                  onChange={(event) => settodoTask(event.target.value)}
+                ></Input>
+                <span style={{ margin: '3px' }}></span>
+                <Button
+                  size="sm"
+                  className=""
+                  variant="dark"
+                  expand="sm"
+                  onClick={handleAddClick}
+                >
+                  ADD
+                </Button>
+                
+             
 
-                }}
-              >
-                ADD
-              </Button>
               <span style={{ margin: "3px" }}></span>
               <Button
                 size="sm"
@@ -170,6 +158,7 @@ function AllTodo(props) {
               >
                 Clear All Task
               </Button>
+              </div>
             </div>
             <Table bordered striped responsive>
               <thead>
