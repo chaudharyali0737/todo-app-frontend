@@ -3,7 +3,7 @@ import {
   getAllTodos,
   getOneTodo,
   insertTodo,
-  // updateOneTodo,
+  updateOneTodo,
   deleteAllTodos,
 } from "../../api/api";
 import React, { useState, useEffect } from "react";
@@ -19,14 +19,19 @@ import {
   // Spinner,
 } from "react-bootstrap";
 
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from '@chakra-ui/react'
 
-// const [isGetAll, setIsGetAll] = useState(false);
 
 // const [todoTask, settodoTask] = useState("");
 
 function AllTodo(props) {
-  const [id, setId] = useState(0);
-const [task, setTask] = useState("");
+  const [editedTaskID, setEditedTaskID] = useState(0);
+  const [isGetAll, setIsGetAll] = useState(false);
   const [todos, settodos] = useState([]);
   const [todoTask, settodoTask] = useState("");
   const [isInserted, setisInserted] = useState(false);
@@ -36,6 +41,8 @@ const [task, setTask] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
   const [deleteTodoID, setdeleteTodoID] = useState(0);
+  const [showEditInput, setShowEditInput] = useState(false);
+  const [editedTask, setEditedTask] = useState(""); // You can use this state to track the edited task
   useEffect(() => {
     const getAll = async () => {
       let result = await getAllTodos();
@@ -45,18 +52,17 @@ const [task, setTask] = useState("");
     };
     settodos([]);
     getAll();
-    console.log("calls made useEffect ", {
-      // isGetAll,
-      // isDeleted,
-      isInserted,
-      isDeleteAll,
-    });
-  }, [isDeleteAll, isInserted, isDeleted]);
+  }, [isDeleteAll, isInserted, isDeleted, isGetAll]);
 
   const insertOneTodo = async () => {
-    insertTodo(todoTask);
-    setisInserted(!isInserted);
-    settodoTask("");
+    if (todoTask !== "") {
+      insertTodo(todoTask);
+      setisInserted(!isInserted);
+      settodoTask("");
+    } else {
+      // alert("cannot add empty todo")
+    }
+
   };
   const getOne = async () => {
     setOneTodo(null);
@@ -75,7 +81,7 @@ const [task, setTask] = useState("");
   };
   const [hoveredRow, setHoveredRow] = useState(null);
 
-  const handleRowHover = (index,id) => {
+  const handleRowHover = (index, id) => {
     setHoveredRow(index);
     setdeleteTodoID(id);
   };
@@ -84,15 +90,26 @@ const [task, setTask] = useState("");
     setHoveredRow(null);
     setdeleteTodoID(0);
   };
-  //   const updateSingleTodo = async () => {
-  //     updateOneTodo(id, task);
-  //     setIsGetAll(!isGetAll);
-  //   };
+  const updateSingleTodo = async () => {
+    updateOneTodo(editedTaskID, editedTask);
+    setIsGetAll(!isGetAll);
+  };
 
   const deleteOneTodo = async () => {
     deleteTodo(deleteTodoID);
-
     setIsDeleted(!isDeleted);
+  };
+
+
+  const handleEditClick = (item) => {
+    setEditedTask(item.task);
+    setEditedTaskID(item.id)
+    setShowEditInput(true);
+  };
+
+  const handleSaveClick = () => {
+    updateSingleTodo(editedTaskID, editedTask)
+    setShowEditInput(false);
   };
   return (
     <>
@@ -128,7 +145,18 @@ const [task, setTask] = useState("");
                 className=""
                 variant="dark"
                 expand="sm"
-                onClick={insertOneTodo}
+                onClick={() => {
+                  if (todoTask === "") {
+                    <Alert status='error'>
+                      <AlertIcon />
+                      <AlertTitle>Your browser is outdated!</AlertTitle>
+                      <AlertDescription>Your Chakra experience may be degraded.</AlertDescription>
+                    </Alert>
+                  } else {
+                    insertOneTodo
+                  }
+
+                }}
               >
                 ADD
               </Button>
@@ -151,37 +179,53 @@ const [task, setTask] = useState("");
                 </tr>
               </thead>
               <tbody>
-                {todos && Array.isArray(todos) && todos.length > 0 ? (
+                {todos && todos.length > 0 ? (
                   todos.map((item, index) => (
                     <tr
                       key={item.id}
-                      onMouseEnter={() => handleRowHover(index,item.id)}
+                      onMouseEnter={() => handleRowHover(index, item.id)}
                       onMouseLeave={handleRowLeave}
                     >
                       <td>{item.id}</td>
                       <td>
-                        {" "}
-                        {item.task}{" "}
-                        {hoveredRow === index && (
-                          
-                          <>
-                            
+                        {item.id === editedTaskID && showEditInput === true ? (
+                          <div>
+                            <input
+                              type="text"
+                              value={editedTask}
+                              onChange={(e) => setEditedTask(e.target.value)}
+                            />
                             <Button
                               style={{ padding: ".25px" }}
                               variant="outline-success"
+                              onClick={() => handleSaveClick()}
                             >
-                              edit
+                              Save
                             </Button>
-                            <Button
-                              style={{ padding: ".25px" }}
-                              variant="outline-danger"
-                              onClick={() => {
-                                deleteOneTodo();
-                              }}
-                            >
-                              {" "}
-                              delete
-                            </Button>
+                          </div>
+                        ) : (
+                          <>
+                            {item.task}
+                            {hoveredRow === index && (
+                              <>
+                                <Button
+                                  style={{ padding: ".25px" }}
+                                  variant="outline-success"
+                                  onClick={() => handleEditClick(item)}
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  style={{ padding: ".25px" }}
+                                  variant="outline-danger"
+                                  onClick={() => {
+                                    deleteOneTodo();
+                                  }}
+                                >
+                                  Delete
+                                </Button>
+                              </>
+                            )}
                           </>
                         )}
                       </td>
@@ -194,7 +238,6 @@ const [task, setTask] = useState("");
                 )}
               </tbody>
             </Table>
-
             <div
               style={{
                 padding: "10px", // Padding around the element
