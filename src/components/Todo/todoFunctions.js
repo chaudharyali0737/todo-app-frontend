@@ -19,13 +19,14 @@ import {
   // Spinner,
 } from "react-bootstrap";
 
-// const [id, setId] = useState(0);
-// const [task, setTask] = useState("");
+
 // const [isGetAll, setIsGetAll] = useState(false);
 
 // const [todoTask, settodoTask] = useState("");
 
 function AllTodo(props) {
+  const [id, setId] = useState(0);
+const [task, setTask] = useState("");
   const [todos, settodos] = useState([]);
   const [todoTask, settodoTask] = useState("");
   const [isInserted, setisInserted] = useState(false);
@@ -74,31 +75,25 @@ function AllTodo(props) {
   };
   const [hoveredRow, setHoveredRow] = useState(null);
 
-  const handleRowHover = (index) => {
+  const handleRowHover = (index,id) => {
     setHoveredRow(index);
+    setdeleteTodoID(id);
   };
 
   const handleRowLeave = () => {
     setHoveredRow(null);
+    setdeleteTodoID(0);
   };
   //   const updateSingleTodo = async () => {
   //     updateOneTodo(id, task);
   //     setIsGetAll(!isGetAll);
   //   };
-  // const deleteItem = (id) => {
-  //   // Create a new array that excludes the item with the specified ID
-  //   const updatedItems = todos.filter((item) => item.id !== id);
 
-  //   // Update the state with the new array
-  //   settodos(updatedItems);
-  // };
   const deleteOneTodo = async () => {
     deleteTodo(deleteTodoID);
 
     setIsDeleted(!isDeleted);
-    // deleteItem(deleteTodoID);
   };
-  // isGetAll, isDeleted, isInserted, isDeleteAll;
   return (
     <>
       <Navbar bg="dark" expand="sm" variant="dark">
@@ -160,7 +155,7 @@ function AllTodo(props) {
                   todos.map((item, index) => (
                     <tr
                       key={item.id}
-                      onMouseEnter={() => handleRowHover(index)}
+                      onMouseEnter={() => handleRowHover(index,item.id)}
                       onMouseLeave={handleRowLeave}
                     >
                       <td>{item.id}</td>
@@ -168,7 +163,9 @@ function AllTodo(props) {
                         {" "}
                         {item.task}{" "}
                         {hoveredRow === index && (
+                          
                           <>
+                            
                             <Button
                               style={{ padding: ".25px" }}
                               variant="outline-success"
@@ -179,7 +176,6 @@ function AllTodo(props) {
                               style={{ padding: ".25px" }}
                               variant="outline-danger"
                               onClick={() => {
-                                setdeleteTodoID(item.id);
                                 deleteOneTodo();
                               }}
                             >
