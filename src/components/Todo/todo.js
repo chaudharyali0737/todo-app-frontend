@@ -1,10 +1,10 @@
 import React from "react";
 import AllTodo from "./todoFunctions";
-function Messages(props) {
+function Todo(props) {
   return (
     <>
       <AllTodo></AllTodo>
     </>
   );
 }
-export default Messages;
+export default Todo;

@@ -2,7 +2,6 @@ import {
   deleteTodo,
   getAllTodos,
   getOneTodo,
-  insertTodo,
   updateOneTodo,
   deleteAllTodos,
 } from "../../api/api";
@@ -16,6 +15,7 @@ import {
   Navbar,
   Table,
 } from "react-bootstrap";
+import {Link} from 'react-router-dom'
 
 
 
@@ -23,8 +23,7 @@ function AllTodo(props) {
   const [editedTaskID, setEditedTaskID] = useState(0);
   const [isGetAll, setIsGetAll] = useState(false);
   const [todos, settodos] = useState([]);
-  const [todoTask, settodoTask] = useState("");
-  const [isInserted, setisInserted] = useState(false);
+
   const [getOneT, setOneTodo] = useState("");
   const [todo, settodo] = useState(0);
   const [isDeleteAll, setIsDeleteAll] = useState(false);
@@ -34,13 +33,6 @@ function AllTodo(props) {
   const [showEditInput, setShowEditInput] = useState(false);
   const [editedTask, setEditedTask] = useState(""); // You can use this state to track the edited task
 
-  const handleAddClick = () => {
-    if (todoTask && todoTask.length > 0) {
-      insertOneTodo();
-    } else {
-      alert("empty task cannot be inserted ")
-    }
-  };
   useEffect(() => {
     const getAll = async () => {
       let result = await getAllTodos();
@@ -50,15 +42,9 @@ function AllTodo(props) {
     };
     settodos([]);
     getAll();
-  }, [isDeleteAll, isInserted, isDeleted, isGetAll]);
+  }, [isDeleteAll, isDeleted, isGetAll]);
 
-  const insertOneTodo = async () => {
 
-    insertTodo(todoTask);
-    setisInserted(!isInserted);
-    settodoTask("");
-
-  };
   const getOne = async () => {
     setOneTodo(null);
     let result2 = await getOneTodo(todo);
@@ -117,50 +103,20 @@ function AllTodo(props) {
       <Container className="d-flex justify-content-center">
         <Card className="shadow-lg">
           <Card.Body>
-            <div
-              style={{
-                padding: "10px", // Padding around the element
-                overflow: "auto", // Enable scrolling if the content overflows
-                whiteSpace: "pre-wrap", // Preserve line breaks and wrap text
-                color: "black", // Text color
-                textAlign: "center", // Center align the text content
-                margin: "19px", // Add margin to create space around the element
-              }}
-            >
-              <div>
-                <Input
-                  placeholder="enter task"
-                  variant="light"
-                  animation="glow"
-                  xs={4}
-                  value={todoTask}
-                  onChange={(event) => settodoTask(event.target.value)}
-                ></Input>
-                <span style={{ margin: '3px' }}></span>
-                <Button
-                  size="sm"
-                  className=""
-                  variant="dark"
-                  expand="sm"
-                  onClick={handleAddClick}
-                >
-                  ADD
-                </Button>
-
-
-
-                <span style={{ margin: "3px" }}></span>
-                <Button
-                  size="sm"
-                  className=""
-                  variant="dark"
-                  expand="sm"
-                  onClick={deleteAll}
-                >
-                  Clear All Task
-                </Button>
-              </div>
+            <div>
+              <Link to="/add" className="btn btn-success my-3">ADD</Link>
+              <span style={{ margin: "3px" }}></span>
+              <Button
+                size="sm"
+                className=""
+                variant="dark"
+                expand="sm"
+                onClick={deleteAll}
+              >
+                Clear All Task
+              </Button>
             </div>
+
             <Table bordered striped responsive>
               <thead>
                 <tr>
