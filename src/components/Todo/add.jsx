@@ -1,11 +1,11 @@
 import React from "react";
 import { Input } from "@mui/material";
-import { useState, useEffect } from "react";
-import {
-    insertTodo,
-    getAllTodos,
+import { useState } from "react";
+// import {
+//     insertTodo,
+//     getAllTodos,
 
-} from "../../api/api";
+// } from "../../api/api";
 import {
     Button,
     Card,
@@ -13,38 +13,44 @@ import {
     Navbar,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux"
+import { addTask } from "../Reducers/taskReducer";
 
 function Add() {
-    const [todoTask, settodoTask] = useState("");
-    const [isInserted, setisInserted] = useState(false);
-    const [todos, settodos] = useState([]);
+
+
+    const todolists = useSelector((state) => state.todolist)
+
+
+    const [todoTask, settodoTask] = useState("")
+
+
+
+
+    const dispatch = useDispatch();
     const navigate = useNavigate();
-    useEffect(() => {
-        const getAll = async () => {
-            let result = await getAllTodos();
-            if (result.length > 0) {
-                settodos(result);
-            }
-        };
-        settodos([]);
-        getAll();
-    }, [isInserted]);
 
-    const handleAddClick = () => {
-        if (todoTask && todoTask.length > 0) {
-            insertOneTodo();
+
+
+
+
+    const handleAddClick = (event) => {
+        console.log(todolists," test")
+        if (todoTask?.length > 0) {
+            event.preventDefault();
+            dispatch(addTask({ task: todoTask }));
+            // if (todolists?.length > 0) {
+
+            // } else {
+
+            //     dispatch(addTask({ id: 1, todoTask }));
+            // }
         } else {
-            alert("empty task cannot be inserted ")
+            alert("Empty task cannot be inserted");
         }
-        navigate("/")
+        navigate("/");
     };
-    const insertOneTodo = async () => {
 
-        insertTodo(todoTask);
-        setisInserted(!isInserted);
-        settodoTask("");
-
-    };
     return (
         <><Navbar bg="dark" expand="sm" variant="dark">
             <Container fluid>

@@ -15,11 +15,13 @@ import {
   Navbar,
   Table,
 } from "react-bootstrap";
+import {  useSelector } from "react-redux"
 import {Link} from 'react-router-dom'
 
 
 
-function AllTodo(props) {
+function AllTodo() {
+  const  todolist=useSelector((state)=>state.task)
   const [editedTaskID, setEditedTaskID] = useState(0);
   const [isGetAll, setIsGetAll] = useState(false);
   const [todos, settodos] = useState([]);
@@ -125,8 +127,8 @@ function AllTodo(props) {
                 </tr>
               </thead>
               <tbody>
-                {todos && todos.length > 0 ? (
-                  todos.map((item, index) => (
+                {todolist && todolist.length > 0 ? (
+                  todolist.map((item, index) => (
                     <tr
                       key={item.id}
                       onMouseEnter={() => handleRowHover(index, item.id)}

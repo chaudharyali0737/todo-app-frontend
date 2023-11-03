@@ -4,13 +4,13 @@ import { Provider } from 'react-redux'
 import React from "react";
 import Add from '../src/components/Todo/add';
 import Todo from "./components/Todo/todo";
-
+import {useSelector} from "react-redux"
 import { BrowserRouter, Routes, Route ,Link } from 'react-router-dom'
 // import add from "./components/Todo/add";
 
 const store = configureStore({
   reducer: {
-
+  todolist:todolists
   }
 })
 function App() {
