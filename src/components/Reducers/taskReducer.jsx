@@ -1,17 +1,51 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import * as api from "../../api/api"
+import { toast } from 'react-toastify';
 
-const todoSlice = createSlice({
+export const addTask = createAsyncThunk(process.env.REACT_APP_INSERT, async ({ todoTask, navigate }, { rejectWithValue }) => {
+  try {
+    const response = api.insertTodo(todoTask);
+    toast.success("successfully added todo", {
+      autoClose: 3000, // Duration in milliseconds (3 seconds)
+    })
+    console.log("esponse.data",response);
+    navigate("/")
+
+    return response.data
+  } catch (err) {
+    return rejectWithValue(err.response.data)
+  }
+});
+const initialState = {
+  tasks: [],
+  local: [],
+}
+export const todoSlice = createSlice({
   name: "todolist",
-  initialState: { 
-    tasks: [],
-    id:[]
-  }, // Use an object with a "tasks" property
+  initialState,
   reducers: {
-    addTask: (state, action) => {
-      state.tasks.push(action.payload.task); // Mutate the "tasks" array
-    },
+    setTask: (state, action) => {
+      const temp = [...state.local, action.payload]
+      state.local = temp;
+    }
   },
+  extraReducers: {
+    [addTask.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [addTask.fulfilled]: (state, action) => {
+      console.log("action.payload]",action.payload)
+      state.loading = false;
+      state.tasks = [action.payload];
+    },
+    [addTask.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+    }
+  }
 });
 
-export const { addTask } = todoSlice.actions;
+export const {
+  setTask,
+} = todoSlice.actions
 export default todoSlice.reducer;

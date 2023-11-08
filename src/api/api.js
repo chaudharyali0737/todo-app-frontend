@@ -1,4 +1,5 @@
 import axios from "axios";
+const API=axios.create({baseURL:"http://localhost:8080"})
 const payloadUpdate = {
   task: "null", // Default task is a string "null"
   id: 0, // Default id is a number 0
@@ -7,7 +8,7 @@ const payloadUpdate = {
 export async function getAllTodos() {
   let todos = "";
   try {
-    const res = await axios.get(process.env.REACT_APP_GET_ALL);
+    const res = await API.get(process.env.REACT_APP_GET_ALL);
     console.log(res.data);
     todos = res.data;
     //    console.log (res.data[0].task)
@@ -17,7 +18,7 @@ export async function getAllTodos() {
   return todos;
 }
 export async function getOneTodo(id) {
-  const resp = await axios
+  const resp = await API
     .get(process.env.REACT_APP_GET_ONE.replace(":id", id))
     .catch((error) => {
       console.log(error);
@@ -36,7 +37,7 @@ export async function updateOneTodo(id, task) {
   console.log(payload, "<< payload >>"); // Logging the payload for debugging
 
   try {
-    await axios.post(process.env.REACT_APP_UPDATE_ONE, payload);
+    await API.post(process.env.REACT_APP_UPDATE_ONE, payload);
     return;
   } catch (error) {
     console.log(error);
@@ -46,7 +47,7 @@ export async function updateOneTodo(id, task) {
 export async function deleteTodo(id) {
   console.log("id for delete todo :", id);
   try {
-    await axios.delete(
+    await API.delete(
       process.env.REACT_APP_DELETE_ONE.replace(":id", Number(id))
     );
     return;
@@ -57,7 +58,7 @@ export async function deleteTodo(id) {
 }
 export async function deleteAllTodos() {
   try {
-    await axios.delete(process.env.REACT_APP_DELETE_ALL);
+    await API.delete(process.env.REACT_APP_DELETE_ALL);
     return;
   } catch (error) {
     console.log(error);
@@ -68,7 +69,7 @@ export async function insertTodo(task) {
   const payload = { ...payloadUpdate };
   payload.task = task;
   try {
-    await axios.post(process.env.REACT_APP_INSERT, payload);
+    await API.post(process.env.REACT_APP_INSERT, payload);
     return;
   } catch (error) {
     console.log(error);

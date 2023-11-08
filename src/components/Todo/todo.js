@@ -1,6 +1,6 @@
 import React from "react";
 import AllTodo from "./todoFunctions";
-function Todo(props) {
+function Todo() {
   return (
     <>
       <AllTodo></AllTodo>

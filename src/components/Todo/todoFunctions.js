@@ -15,16 +15,19 @@ import {
   Navbar,
   Table,
 } from "react-bootstrap";
-import {  useSelector } from "react-redux"
-import {Link} from 'react-router-dom'
+import { useSelector } from "react-redux"
+import { Link } from 'react-router-dom'
 
 
 
 function AllTodo() {
-  const  todolist=useSelector((state)=>state.task)
+  // const todolist= useSelector((state) => state.todolist.tasks)
+  const todolist= useSelector((state) => state.todolist.local)
+
+  
   const [editedTaskID, setEditedTaskID] = useState(0);
   const [isGetAll, setIsGetAll] = useState(false);
-  const [todos, settodos] = useState([]);
+  const [todos, setTodos] = useState([]);
 
   const [getOneT, setOneTodo] = useState("");
   const [todo, settodo] = useState(0);
@@ -36,16 +39,10 @@ function AllTodo() {
   const [editedTask, setEditedTask] = useState(""); // You can use this state to track the edited task
 
   useEffect(() => {
-    const getAll = async () => {
-      let result = await getAllTodos();
-      if (result.length > 0) {
-        settodos(result);
-      }
-    };
-    settodos([]);
-    getAll();
-  }, [isDeleteAll, isDeleted, isGetAll]);
-
+    console.log({todolist},"store");
+    setTodos(todolist)
+    console.log({todos},"list");
+  }, [todolist]);
 
   const getOne = async () => {
     setOneTodo(null);
@@ -60,13 +57,13 @@ function AllTodo() {
   const deleteAll = async () => {
     await deleteAllTodos();
     setIsDeleteAll(!isDeleteAll);
-    settodos([]);
+    setTodos([]);
   };
   const [hoveredRow, setHoveredRow] = useState(null);
 
-  const handleRowHover = (index, id) => {
+  const handleRowHover = (index) => {
     setHoveredRow(index);
-    setdeleteTodoID(id);
+    setdeleteTodoID(index);
   };
 
   const handleRowLeave = () => {
@@ -122,21 +119,20 @@ function AllTodo() {
             <Table bordered striped responsive>
               <thead>
                 <tr>
-                  <th>ID</th>
                   <th>TASK</th>
                 </tr>
               </thead>
               <tbody>
-                {todolist && todolist.length > 0 ? (
-                  todolist.map((item, index) => (
+                {todos  && todos.length > 0 ? (
+                  todos?.map((item, index) => (
                     <tr
-                      key={item.id}
-                      onMouseEnter={() => handleRowHover(index, item.id)}
+                      key={index}
+                      onMouseEnter={() => handleRowHover(index)}
                       onMouseLeave={handleRowLeave}
                     >
-                      <td>{item.id}</td>
+  
                       <td>
-                        {item.id === editedTaskID && showEditInput === true ? (
+                        {index === editedTaskID && showEditInput === true ? (
                           <div>
                             <input
                               type="text"
@@ -153,7 +149,7 @@ function AllTodo() {
                           </div>
                         ) : (
                           <>
-                            {item.task}
+                            {item }
                             {hoveredRow === index && (
                               <>
                                 <Button

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@mui/material";
 import { useState } from "react";
 // import {
@@ -13,42 +13,24 @@ import {
     Navbar,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux"
-import { addTask } from "../Reducers/taskReducer";
+import { useDispatch } from "react-redux"
+import { toast } from "react-toastify";
+
+import { addTask, setTask } from "../Reducers/taskReducer";
 
 function Add() {
-
-
-    const todolists = useSelector((state) => state.todolist)
-
-
-    const [todoTask, settodoTask] = useState("")
-
-
-
-
     const dispatch = useDispatch();
+    const [todoTask, settodoTask] = useState("")
     const navigate = useNavigate();
-
-
-
-
-
-    const handleAddClick = (event) => {
-        console.log(todolists," test")
+    const handleAddClick = () => {
         if (todoTask?.length > 0) {
-            event.preventDefault();
-            dispatch(addTask({ task: todoTask }));
-            // if (todolists?.length > 0) {
-
-            // } else {
-
-            //     dispatch(addTask({ id: 1, todoTask }));
-            // }
+            dispatch(addTask({todoTask,navigate})) 
+            dispatch(setTask(todoTask))
+            // navigate("/");
         } else {
-            alert("Empty task cannot be inserted");
+            toast.warn("Empty task cannot be inserted", { autoClose: 600 });
+            navigate("/add");
         }
-        navigate("/");
     };
 
     return (
