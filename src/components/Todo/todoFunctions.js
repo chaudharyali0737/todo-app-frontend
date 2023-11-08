@@ -1,6 +1,5 @@
 import {
   deleteTodo,
-  getAllTodos,
   getOneTodo,
   updateOneTodo,
   deleteAllTodos,
@@ -17,12 +16,13 @@ import {
 } from "react-bootstrap";
 import { useSelector } from "react-redux"
 import { Link } from 'react-router-dom'
-
+import { GetAll,setTask } from "../Reducers/taskReducer";
+import { useDispatch } from "react-redux"
 
 
 function AllTodo() {
   // const todolist= useSelector((state) => state.todolist.tasks)
-  const todolist= useSelector((state) => state.todolist.local)
+  const todolist= useSelector((state) => state.todolist.data)
 
   
   const [editedTaskID, setEditedTaskID] = useState(0);
@@ -37,12 +37,13 @@ function AllTodo() {
   const [deleteTodoID, setdeleteTodoID] = useState(0);
   const [showEditInput, setShowEditInput] = useState(false);
   const [editedTask, setEditedTask] = useState(""); // You can use this state to track the edited task
-
+  const dispatch = useDispatch();
   useEffect(() => {
+    dispatch( GetAll({})) 
     console.log({todolist},"store");
     setTodos(todolist)
     console.log({todos},"list");
-  }, [todolist]);
+  },[dispatch],);
 
   const getOne = async () => {
     setOneTodo(null);
@@ -149,7 +150,7 @@ function AllTodo() {
                           </div>
                         ) : (
                           <>
-                            {item }
+                            {item}
                             {hoveredRow === index && (
                               <>
                                 <Button

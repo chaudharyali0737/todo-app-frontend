@@ -8,7 +8,7 @@ export const addTask = createAsyncThunk(process.env.REACT_APP_INSERT, async ({ t
     toast.success("successfully added todo", {
       autoClose: 3000, // Duration in milliseconds (3 seconds)
     })
-    console.log("esponse.data",response);
+    console.log("Response.data", response);
     navigate("/")
 
     return response.data
@@ -16,31 +16,43 @@ export const addTask = createAsyncThunk(process.env.REACT_APP_INSERT, async ({ t
     return rejectWithValue(err.response.data)
   }
 });
+
+export const GetAll = createAsyncThunk(process.env.REACT_APP_GET_ALL, async ({ rejectWithValue }) => {
+  try {
+    const response = api.getAllTodos()
+    toast.success("successfully GET todo", {
+      autoClose: 3000, // Duration in milliseconds (3 seconds)
+    })
+    console.log("Response.data get all ", response.data);
+    return response.data
+  } catch (err) {
+    return rejectWithValue(err.response.data)
+  }
+});
 const initialState = {
-  tasks: [],
-  local: [],
+ data:[""]
 }
 export const todoSlice = createSlice({
   name: "todolist",
   initialState,
   reducers: {
     setTask: (state, action) => {
-      const temp = [...state.local, action.payload]
-      state.local = temp;
+      state.data = [action.payload];
     }
   },
   extraReducers: {
-    [addTask.pending]: (state, action) => {
+    [GetAll.pending]: (state, action) => {
       state.loading = true;
     },
-    [addTask.fulfilled]: (state, action) => {
-      console.log("action.payload]",action.payload)
+    [GetAll.fulfilled]: (state, action) => {
+      console.log("action.payload]", action.payload)
       state.loading = false;
-      state.tasks = [action.payload];
+      console.log(action.payload,"payload");
+      state.data = [action.payload];
     },
-    [addTask.rejected]: (state, action) => {
+    [GetAll.rejected]: (state, action) => {
       state.loading = false;
-      state.error = action.payload.message;
+      state.error = action.payload;
     }
   }
 });

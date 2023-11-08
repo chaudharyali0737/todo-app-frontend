@@ -25,7 +25,7 @@ function Add() {
     const handleAddClick = () => {
         if (todoTask?.length > 0) {
             dispatch(addTask({todoTask,navigate})) 
-            dispatch(setTask(todoTask))
+            // dispatch(setTask(todoTask))
             // navigate("/");
         } else {
             toast.warn("Empty task cannot be inserted", { autoClose: 600 });

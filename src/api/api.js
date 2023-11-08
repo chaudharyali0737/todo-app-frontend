@@ -5,18 +5,19 @@ const payloadUpdate = {
   id: 0, // Default id is a number 0
 };
 
-export async function getAllTodos() {
-  let todos = "";
-  try {
-    const res = await API.get(process.env.REACT_APP_GET_ALL);
-    console.log(res.data);
-    todos = res.data;
-    //    console.log (res.data[0].task)
-  } catch (err) {
-    console.log(err);
-  }
-  return todos;
-}
+export  const  getAllTodos=()=>API.get(process.env.REACT_APP_GET_ALL);
+// {
+
+//   // let todos = "";
+//   // try {
+//   //   const res = await 
+//   //   todos = res.data;
+//   //   //    console.log (res.data[0].task)
+//   // } catch (err) {
+//   //   console.log(err);
+//   // }
+//   // return todos;
+// }
 export async function getOneTodo(id) {
   const resp = await API
     .get(process.env.REACT_APP_GET_ONE.replace(":id", id))
